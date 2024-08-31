@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
+require 'colorize'
+
 # Class with includes logic for board class such as printing logic
 class Board
+  attr_accessor :data
+
   COLORS = %i[yellow red].freeze
   BOARD_ROWS = 6
   BOARD_COLUMNS = 7
   EMPTY_CELL = ' '
-  attr_accessor :board_data
+  PEG = '•'
 
   def initialize
-    @board_data = Array.new(BOARD_ROWS) { Array.new(BOARD_COLUMNS, EMPTY_CELL) }
+    @data = Array.new(BOARD_ROWS) { Array.new(BOARD_COLUMNS) }
   end
 
   def print_board
@@ -21,9 +25,11 @@ class Board
   private
 
   def print_rows
-    @board_data.each do |row|
+    @data.each do |row|
       print '|'
-      row.each { |element| print " #{element} |" }
+      row.each do |element|
+        print " #{(element && PEG.colorize(color: COLORS[element], mode: :bold)) || EMPTY_CELL} |"
+      end
       puts
       print_bottom_line
       puts
