@@ -9,8 +9,8 @@ class Board
   COLORS = %i[yellow red].freeze
   BOARD_ROWS = 6
   BOARD_COLUMNS = 7
-  EMPTY_CELL = ' '
-  PEG = '•'
+  EMPTY_CELL = '○'
+  PEG = '➊'
 
   def initialize
     @data = Array.new(BOARD_ROWS) { Array.new(BOARD_COLUMNS) }

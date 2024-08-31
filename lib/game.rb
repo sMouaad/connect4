@@ -16,18 +16,90 @@ class Game
   def start
     loop do
       @board.print_board
-      user_choice = play
-      until @next_row[user_choice] >= 0
+      column = play
+      until @next_row[column] >= 0
         puts 'Column full... try again.'
-        user_choice = play
+        column = play
       end
-      @board.data[@next_row[user_choice]][user_choice] = @current_player
-      @next_row[user_choice] -= 1
+      @board.data[@next_row[column]][column] = @current_player
+      if check_win?(@next_row[column], column)
+        @board.print_board
+        puts "Player #{@current_player + 1} wins!"
+        break
+      end
+      @next_row[column] -= 1
       @current_player = (@current_player + 1) % 2
     end
   end
 
   private
+
+  def check_win?(row, column)
+    check_horizontal?(row, column) || check_vertical?(row, column) || check_diagonal?(row, column)
+  end
+
+  def check_horizontal?(row, column)
+    count_peg_horizontal(row, column, 1) + count_peg_horizontal(row, column, -1) >= 3
+  end
+
+  def check_vertical?(row, column)
+    count_peg_vertical(row, column, 1) + count_peg_vertical(row, column, -1) >= 3
+  end
+
+  def check_diagonal?(row, column)
+    return true if count_peg_diagonal(row, column, 1) + count_peg_diagonal(row, column, -1) >= 3
+
+    count_peg_diagonal_inverted(row, column, 1) + count_peg_diagonal_inverted(row, column, -1) >= 3
+  end
+
+  ## count methods count how many pegs are in a row
+  def count_peg_horizontal(row, column, direction)
+    count_peg = 0
+    offset = 1
+    while correct_column_index?(column + (offset * direction)) && @board.data[row][column + (offset * direction)] == @current_player
+      count_peg += 1
+      offset += 1
+    end
+    count_peg
+  end
+
+  def count_peg_vertical(row, column, direction)
+    count_peg = 0
+    offset = 1
+    while correct_row_index?(row + (offset * direction)) && @board.data[row + (offset * direction)][column] == @current_player
+      count_peg += 1
+      offset += 1
+    end
+    count_peg
+  end
+
+  def count_peg_diagonal(row, column, direction)
+    count_peg = 0
+    offset = 1
+    while correct_row_index?(row + (offset * direction)) && correct_column_index?(column + (offset * direction)) && @board.data[row + (offset * direction)][column + (offset * direction)] == @current_player
+      count_peg += 1
+      offset += 1
+    end
+    count_peg
+  end
+
+  def count_peg_diagonal_inverted(row, column, direction)
+    count_peg = 0
+    offset = 1
+    while correct_row_index?(row + (offset * direction)) && correct_column_index?(column - (offset * direction)) && @board.data[row + (offset * direction)][column - (offset * direction)] == @current_player
+      count_peg += 1
+      offset += 1
+    end
+    count_peg
+  end
+
+  def correct_row_index?(index)
+    index.between?(0, Board::BOARD_ROWS - 1)
+  end
+
+  def correct_column_index?(index)
+    index.between?(0, Board::BOARD_COLUMNS - 1)
+  end
 
   def play
     (first_player? ? @player_one.play : @player_two.play)
