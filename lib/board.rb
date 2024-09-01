@@ -55,5 +55,3 @@ class Board
     print "|#{'___|' * BOARD_COLUMNS}"
   end
 end
-
-Board.new.print_board
