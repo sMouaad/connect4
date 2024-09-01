@@ -17,10 +17,6 @@ class Game
     loop do
       @board.print_board
       column = play
-      until @next_row[column] >= 0
-        puts 'Column full... try again.'
-        column = play
-      end
       @board.data[@next_row[column]][column] = @current_player
       if check_win?(@next_row[column], column)
         @board.print_board
@@ -52,7 +48,7 @@ class Game
     count_peg_diagonal_inverted(row, column, 1) + count_peg_diagonal_inverted(row, column, -1) >= 3
   end
 
-  ## count methods count how many pegs are in a row
+  ## count methods count how many pegs are in a row, vertically, horizontally, diagonally
   def count_peg_horizontal(row, column, direction)
     count_peg = 0
     offset = 1
@@ -102,7 +98,12 @@ class Game
   end
 
   def play
-    (first_player? ? @player_one.play : @player_two.play)
+    user_choice = (first_player? ? @player_one.play : @player_two.play)
+    until @next_row[user_choice] >= 0
+      puts 'user_choice full... try again.'
+      user_choice = (first_player? ? @player_one.play : @player_two.play)
+    end
+    user_choice
   end
 
   def first_player?
