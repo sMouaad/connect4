@@ -110,5 +110,3 @@ class Game
     @current_player.zero?
   end
 end
-
-Game.new.start
