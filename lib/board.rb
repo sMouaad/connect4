@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require 'colorize'
+require_relative 'clear_screen'
 
 # Class with includes logic for board class such as printing logic
 class Board
+  include ClearScreen
   attr_accessor :data
 
   COLORS = %i[yellow red].freeze
@@ -17,6 +19,7 @@ class Board
   end
 
   def print_board
+    clear_screen
     print_top_line
     print_rows
     print_column_numbers
