@@ -39,7 +39,7 @@ class Game
   end
 
   def check_vertical?(row, column)
-    count_peg_vertical(row, column, 1) + count_peg_vertical(row, column, -1) >= 3
+    count_peg_vertical(row, column) >= 3
   end
 
   def check_diagonal?(row, column)
@@ -59,10 +59,10 @@ class Game
     count_peg
   end
 
-  def count_peg_vertical(row, column, direction)
+  def count_peg_vertical(row, column)
     count_peg = 0
     offset = 1
-    while correct_row_index?(row + (offset * direction)) && @board.data[row + (offset * direction)][column] == @current_player
+    while correct_row_index?(row + offset) && @board.data[row + offset][column] == @current_player
       count_peg += 1
       offset += 1
     end
