@@ -8,11 +8,13 @@ class Board
   include ClearScreen
   attr_accessor :data
 
-  COLORS = %i[yellow red].freeze
+  PLAYER_ONE = :yellow
+  PLAYER_TWO = :red
+  COLORS = [PLAYER_ONE, PLAYER_TWO].freeze
   BOARD_ROWS = 6
   BOARD_COLUMNS = 7
   EMPTY_CELL = '○'
-  PEG = '➊'
+  PEG = '○'
 
   def initialize
     @data = Array.new(BOARD_ROWS) { Array.new(BOARD_COLUMNS) }

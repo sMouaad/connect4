@@ -1,16 +1,22 @@
 # frozen_string_literal: true
 
 require_relative 'board'
-require_relative 'player'
+require_relative 'players/computer'
+require_relative 'players/human'
 
 # Game class containing gameplay logic
 class Game
-  def initialize
+  def initialize(ai, player)
     @current_player = 0
     @next_row = Array.new(Board::BOARD_COLUMNS, Board::BOARD_ROWS - 1)
     @board = Board.new
-    @player_one = Player.new(0)
-    @player_two = Player.new(1)
+    if ai == 1
+      @player_one = Human.new(Board::PLAYER_ONE)
+      @player_two = Human.new(Board::PLAYER_TWO)
+    else
+      @player_one = (player == 1 ? Human.new(Board::PLAYER_ONE) : Computer.new(Board::PLAYER_ONE))
+      @player_two = (player == 2 ? Human.new(Board::PLAYER_ONE) : Computer.new(Board::PLAYER_ONE))
+    end
   end
 
   def start
@@ -100,7 +106,7 @@ class Game
   def play
     user_choice = (first_player? ? @player_one.play : @player_two.play)
     until @next_row[user_choice] >= 0
-      puts 'user_choice full... try again.'
+      puts "Column #{user_choice + 1} full... try again."
       user_choice = (first_player? ? @player_one.play : @player_two.play)
     end
     user_choice
