@@ -13,8 +13,9 @@ class Board
   COLORS = [PLAYER_ONE, PLAYER_TWO].freeze
   BOARD_ROWS = 6
   BOARD_COLUMNS = 7
-  EMPTY_CELL = '○'
-  PEG = '○'
+  EMPTY_CELL = '● '.colorize(:grey)
+  BACKGROUND_COLOR = :black
+  PEG = '● '
 
   def initialize
     @data = Array.new(BOARD_ROWS) { Array.new(BOARD_COLUMNS) }
@@ -22,7 +23,6 @@ class Board
 
   def print_board
     clear_screen
-    print_top_line
     print_rows
     print_column_numbers
   end
@@ -31,12 +31,10 @@ class Board
 
   def print_rows
     @data.each do |row|
-      print '|'
       row.each do |element|
-        print " #{(element && PEG.colorize(color: COLORS[element], mode: :bold)) || EMPTY_CELL} |"
+        print " #{(element && PEG.colorize(color: COLORS[element],
+                                           mode: :bold)) || EMPTY_CELL}".colorize(background: BACKGROUND_COLOR)
       end
-      puts
-      print_bottom_line
       puts
     end
   end
@@ -44,19 +42,11 @@ class Board
   def print_column_numbers
     1.upto(BOARD_COLUMNS) do |number|
       if number < 10
-        print "  #{number} "
-      else
         print " #{number} "
+      else
+        print "#{number} "
       end
     end
     puts
-  end
-
-  def print_top_line
-    puts " #{'_' * ((BOARD_COLUMNS * 4) - 1)}"
-  end
-
-  def print_bottom_line
-    print "|#{'___|' * BOARD_COLUMNS}"
   end
 end
